@@ -1,0 +1,73 @@
+ import random
+def voto(lista):
+    return random.choice(lista)
+def eleicao(funcao, lista, quantidade):
+    vot = []
+    for i in range(quantidade):
+        vot.append(funcao(lista))
+    return vot
+def apuracao(lista1, lista2):
+    lista1.remove('Nulo')
+    lista1.remove('Branco')
+    geral = {}
+    for i in lista1:
+        votos = lista2.count(i)
+        geral[i] = votos
+    cont = 1
+    for v in sorted(geral, key=geral.get, reverse=True):
+        if cont == len(lista1):
+            print('%s : %d votos' %(v, geral[v]))
+        else:
+            print('%s : %d votos' %(v, geral[v]))
+            print('------------------------')
+        cont += 1
+    print('-----------------------------------')
+    print('Número de eleitores : %d' %(len(lista2)))
+    return None
+def resultado(lista1, lista2):
+    nome = ''
+    t_votos = 0
+    lnomes = []
+    empate = []
+    for i in lista1:
+        if lista2.count(i) > t_votos:
+            nome = i
+            t_votos = lista2.count(i)
+            lnomes.clear()
+            empate.clear()
+        elif lista2.count(i) == t_votos:
+            lnomes.append(i)
+            lnomes.append(nome)
+            empate.append(lista2.count(i))
+    if len(lnomes) == 0 :
+        porcen = (t_votos*100)/len(lista2)
+        print('''
+        ************************
+          Vencedor: %s 
+         Número de votos: %d      
+         Percentual dos votos: %.1f
+         **************************                            
+     ''' %(nome, t_votos, porcen))
+    else:
+        porcen = (empate[0]*100)/len(lista2)
+        for i in lnomes:
+            print('''
+                   ************** 
+                   %s com %d votos       
+               Percentual de votos: %.1f
+               *********************   
+            ''' %(i, empate[0], porcen))
+QC = int(input('\nNumero de Candidatos: '))
+
+candidatos = ['Branco', 'Nulo']
+for cand in range(1, (QC+1)):
+    nome = input('\nNome do Candidato %d : ' %cand)
+    candidatos.append(nome)
+   
+QE = int(input('\nNumero de Eleitores : '))
+
+votacao = eleicao(voto, candidatos, QE)
+vn = votacao.count('Nulo')
+vb = votacao.count('Branco')
+print(apuracao(candidatos, votacao))
+print('Votos Nulos : %d\nVotos Brancos : %d' %(vn, vb))
